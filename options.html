@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Configurações — Mais Delivery Monitor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-width: 540px;
+    max-width: 700px;
+    margin: 0 auto;
+    background: #111318;
+    color: #c8cdd8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 14px;
+    padding: 0 0 40px;
+  }
+
+  .page-header {
+    background: #9b1814;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .page-header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .page-header span {
+    font-size: 24px;
+  }
+
+  .container { padding: 0 28px; }
+
+  .card {
+    background: #1a1d23;
+    border: 1px solid #2e3340;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #4b5563;
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2e3340;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #1e2330;
+    gap: 16px;
+  }
+
+  .form-row:last-child { border-bottom: none; }
+
+  .form-label {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .form-label strong {
+    font-weight: 500;
+    color: #e5e7eb;
+    font-size: 13px;
+  }
+
+  .form-label small {
+    color: #6b7280;
+    font-size: 11px;
+  }
+
+  /* Toggle switch */
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #2e3340;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: #6b7280;
+    border-radius: 50%;
+    left: 3px;
+    top: 3px;
+    transition: 0.2s;
+  }
+
+  .toggle input:checked + .toggle-slider { background: #9b1814; }
+  .toggle input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+    background: #fff;
+  }
+
+  /* Number input */
+  .number-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .number-input input[type="number"] {
+    width: 70px;
+    background: #252930;
+    border: 1px solid #2e3340;
+    color: #e5e7eb;
+    border-radius: 7px;
+    padding: 6px 10px;
+    font-size: 14px;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .number-input input[type="number"]:focus { border-color: #9b1814; }
+  .number-input label { color: #6b7280; font-size: 12px; }
+
+  /* Status checkboxes */
+  .status-checks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  .status-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #252930;
+    border: 1px solid #2e3340;
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+
+  .status-check:has(input:checked) { border-color: #9b1814; }
+
+  .status-check input { accent-color: #9b1814; cursor: pointer; }
+  .status-check span { font-size: 11px; color: #9ca3af; }
+
+  /* Botões */
+  .acoes {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  .btn {
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: 1px solid #2e3340;
+    background: #252930;
+    color: #c8cdd8;
+    font-size: 13px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .btn:hover { background: #2e3340; color: #fff; }
+
+  .btn-salvar {
+    background: #9b1814;
+    border-color: #9b1814;
+    color: #fff;
+  }
+
+  .btn-salvar:hover { background: #b91c1c; border-color: #b91c1c; }
+
+  /* Toast de confirmação */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #10b981;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.25s;
+    pointer-events: none;
+  }
+
+  .toast.visivel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .version-tag {
+    text-align: center;
+    color: #4b5563;
+    font-size: 11px;
+    margin-top: 32px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <span>⚙</span>
+  <h1>Configurações — Mais Delivery Monitor</h1>
+</div>
+
+<div class="container">
+
+  <!-- Alertas -->
+  <div class="card">
+    <div class="card-title">Alertas e notificações</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Minutos para alerta de pedido parado</strong>
+        <small>Dispara alerta quando pedido fica no mesmo status por esse tempo</small>
+      </div>
+      <div class="number-input">
+        <input type="number" id="alertaMinutosParado" min="1" max="120" value="10">
+        <label>min</label>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Notificações desktop</strong>
+        <small>Mostra notificação do sistema operacional</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="notificacaoDesktop" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Som — novo pedido</strong>
+        <small>Toca bipe ao chegar pedido novo</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="somNovoPedido" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Som — pedido atrasado</strong>
+        <small>Toca bipe de alerta quando pedido ultrapassa o tempo</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="somPedidoAtrasado" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Som — mudança de status</strong>
+        <small>Toca bipe sutil a cada mudança de status</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="somMudancaStatus">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Polling -->
+  <div class="card">
+    <div class="card-title">Monitoramento</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Intervalo de verificação</strong>
+        <small>Com que frequência a extensão relê os dados da tela</small>
+      </div>
+      <div class="number-input">
+        <input type="number" id="pollingIntervalSeg" min="5" max="120" value="15">
+        <label>seg</label>
+      </div>
+    </div>
+
+    <div class="form-row" style="align-items: flex-start;">
+      <div class="form-label">
+        <strong>Status monitorados para "atrasado"</strong>
+        <small>Pedidos nesses status são considerados ao contar atrasados</small>
+      </div>
+    </div>
+    <div class="status-checks" id="status-checks">
+      <label class="status-check">
+        <input type="checkbox" value="-1"> <span>Ag. pagamento</span>
+      </label>
+      <label class="status-check">
+        <input type="checkbox" value="1"> <span>Verificando</span>
+      </label>
+      <label class="status-check">
+        <input type="checkbox" value="2"> <span>Na fila</span>
+      </label>
+      <label class="status-check">
+        <input type="checkbox" value="3"> <span>Em andamento</span>
+      </label>
+      <label class="status-check">
+        <input type="checkbox" value="4"> <span>Pronto entrega</span>
+      </label>
+      <label class="status-check">
+        <input type="checkbox" value="5"> <span>Saiu entrega</span>
+      </label>
+      <label class="status-check">
+        <input type="checkbox" value="7"> <span>Na porta</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="card">
+    <div class="card-title">Painel overlay</div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Mostrar painel flutuante</strong>
+        <small>Painel arrastável sobreposto ao sistema</small>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="overlayVisivel" checked>
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="form-row">
+      <div class="form-label">
+        <strong>Posição inicial</strong>
+        <small>Posição X,Y do overlay ao abrir a página</small>
+      </div>
+      <div class="number-input" style="gap:4px;">
+        <label>X</label>
+        <input type="number" id="overlayX" min="0" max="2000" value="20" style="width:60px;">
+        <label style="margin-left:6px;">Y</label>
+        <input type="number" id="overlayY" min="0" max="2000" value="80" style="width:60px;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações -->
+  <div class="acoes">
+    <button class="btn" id="btn-restaurar">Restaurar padrões</button>
+    <button class="btn btn-salvar" id="btn-salvar">Salvar configurações</button>
+  </div>
+
+  <div class="version-tag">Mais Delivery Monitor v1.0.0</div>
+</div>
+
+<div class="toast" id="toast">Configurações salvas!</div>
+
+<script src="options.js"></script>
+</body>
+</html>

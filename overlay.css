@@ -1,0 +1,235 @@
+/* ============================================================
+   overlay.css — Estilos do painel flutuante MDMonitor
+   ============================================================ */
+
+#mdm-overlay {
+  position: fixed;
+  z-index: 2147483647;
+  width: 260px;
+  background: #1a1d23;
+  border: 1px solid #2e3340;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  color: #c8cdd8;
+  user-select: none;
+  transition: box-shadow 0.2s;
+}
+
+#mdm-overlay:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+/* Header arrastável */
+#mdm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px 8px 12px;
+  background: #9b1814;
+  border-radius: 11px 11px 0 0;
+  cursor: grab;
+  gap: 8px;
+}
+
+#mdm-header:active {
+  cursor: grabbing;
+}
+
+#mdm-titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+#mdm-header-btns {
+  display: flex;
+  gap: 4px;
+}
+
+#mdm-header-btns button {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s;
+}
+
+#mdm-header-btns button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* Corpo */
+#mdm-corpo {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Resumo topo — 3 métricas grandes */
+#mdm-resumo-topo {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.mdm-stat {
+  background: #252930;
+  border-radius: 8px;
+  padding: 8px 4px;
+  text-align: center;
+  border: 1px solid #2e3340;
+}
+
+.mdm-stat-alert {
+  border-color: #e74c3c44;
+  background: #2a1f1f;
+}
+
+.mdm-stat-warn {
+  border-color: #f39c1244;
+  background: #272319;
+}
+
+.mdm-stat-num {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 3px;
+}
+
+.mdm-stat-alert .mdm-stat-num { color: #e74c3c; }
+.mdm-stat-warn .mdm-stat-num  { color: #f39c12; }
+
+.mdm-stat-label {
+  display: block;
+  font-size: 10px;
+  color: #7a8097;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Pulsando quando há atrasados */
+@keyframes mdm-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(231,76,60,0); }
+}
+.mdm-pulsando {
+  animation: mdm-pulse 1.5s ease infinite;
+}
+
+/* Grid de status pequenos */
+#mdm-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.mdm-sitem {
+  background: #252930;
+  border-radius: 6px;
+  padding: 5px 3px;
+  text-align: center;
+  border: 1px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.mdm-snum {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1;
+}
+
+.mdm-slabel {
+  display: block;
+  font-size: 9px;
+  color: #6b7280;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Cores por status */
+.mdm-s-aguardando  { border-color: #6b728044; } .mdm-s-aguardando .mdm-snum  { color: #9ca3af; }
+.mdm-s-verificando { border-color: #3b82f644; } .mdm-s-verificando .mdm-snum { color: #60a5fa; }
+.mdm-s-fila        { border-color: #8b5cf644; } .mdm-s-fila .mdm-snum        { color: #a78bfa; }
+.mdm-s-andamento   { border-color: #f5970044; } .mdm-s-andamento .mdm-snum   { color: #fbbf24; }
+.mdm-s-pronto      { border-color: #10b98144; } .mdm-s-pronto .mdm-snum      { color: #34d399; }
+.mdm-s-saiu        { border-color: #06b6d444; } .mdm-s-saiu .mdm-snum        { color: #22d3ee; }
+.mdm-s-porta       { border-color: #9b181444; } .mdm-s-porta .mdm-snum       { color: #f87171; }
+
+/* Lista de alertas recentes */
+#mdm-alertas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+#mdm-alertas-lista::-webkit-scrollbar { width: 3px; }
+#mdm-alertas-lista::-webkit-scrollbar-thumb { background: #3a3f50; border-radius: 2px; }
+
+.mdm-alerta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  background: #252930;
+  border-radius: 6px;
+  padding: 5px 7px;
+  border-left: 2px solid #3a3f50;
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.mdm-alerta-alta   { border-left-color: #e74c3c; background: #2a1f1f; }
+.mdm-alerta-media  { border-left-color: #3b82f6; background: #1f2430; }
+.mdm-alerta-baixa  { border-left-color: #6b7280; }
+
+.mdm-alerta-icone { flex-shrink: 0; font-size: 12px; margin-top: 1px; }
+.mdm-alerta-msg   { flex: 1; color: #c8cdd8; }
+.mdm-alerta-hora  { flex-shrink: 0; color: #6b7280; font-size: 10px; }
+
+/* Rodapé */
+#mdm-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+  border-top: 1px solid #2e3340;
+}
+
+#mdm-ultima-atualizacao {
+  font-size: 10px;
+  color: #4b5563;
+}
+
+#mdm-btn-config {
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+#mdm-btn-config:hover { color: #c8cdd8; }

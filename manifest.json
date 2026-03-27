@@ -1,0 +1,49 @@
+{
+  "manifest_version": 3,
+  "name": "Mais Delivery Monitor",
+  "version": "1.0.0",
+  "description": "Monitora pedidos do painel Mais Delivery em tempo real com alertas, overlay e dashboard.",
+  "permissions": [
+    "storage",
+    "notifications",
+    "alarms",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://painel.maisdeliveryempresas.com.br/*",
+    "*://*.maisdeliveryfranquia.com.br/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://painel.maisdeliveryempresas.com.br/painel/pedidos.php*"
+      ],
+      "js": ["content.js"],
+      "css": ["overlay.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["sounds/*.mp3", "sounds/*.wav"],
+      "matches": ["*://painel.maisdeliveryempresas.com.br/*"]
+    }
+  ]
+}

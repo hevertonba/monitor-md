@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mais Delivery Monitor</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 320px;
+    min-height: 200px;
+    background: #1a1d23;
+    color: #c8cdd8;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+  }
+
+  /* Header */
+  .header {
+    background: #9b1814;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .header-logo {
+    width: 24px;
+    height: 24px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  .header-badge {
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  /* Seção */
+  .section {
+    padding: 12px 16px;
+    border-bottom: 1px solid #2e3340;
+  }
+
+  .section-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #4b5563;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+
+  /* Grid de métricas */
+  .metricas-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+  }
+
+  .metrica {
+    background: #252930;
+    border: 1px solid #2e3340;
+    border-radius: 8px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+
+  .metrica-num {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+    display: block;
+    line-height: 1;
+  }
+
+  .metrica-label {
+    font-size: 10px;
+    color: #6b7280;
+    display: block;
+    margin-top: 3px;
+  }
+
+  .metrica.alert { border-color: #e74c3c55; background: #2a1f1f; }
+  .metrica.alert .metrica-num { color: #e74c3c; }
+  .metrica.warn  { border-color: #f39c1255; background: #272319; }
+  .metrica.warn  .metrica-num { color: #f39c12; }
+  .metrica.ok    { border-color: #10b98155; background: #1a2720; }
+  .metrica.ok    .metrica-num { color: #34d399; }
+
+  /* Grid status */
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+  }
+
+  .status-item {
+    background: #252930;
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 3px solid #3a3f50;
+  }
+
+  .status-nome {
+    font-size: 11px;
+    color: #9ca3af;
+  }
+
+  .status-qt {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* Cores por status */
+  .s--1 { border-left-color: #6b7280; } .s--1 .status-qt { color: #9ca3af; }
+  .s-1  { border-left-color: #3b82f6; } .s-1  .status-qt { color: #60a5fa; }
+  .s-2  { border-left-color: #8b5cf6; } .s-2  .status-qt { color: #a78bfa; }
+  .s-3  { border-left-color: #f59700; } .s-3  .status-qt { color: #fbbf24; }
+  .s-4  { border-left-color: #10b981; } .s-4  .status-qt { color: #34d399; }
+  .s-5  { border-left-color: #06b6d4; } .s-5  .status-qt { color: #22d3ee; }
+  .s-7  { border-left-color: #9b1814; } .s-7  .status-qt { color: #f87171; }
+  .s-6  { border-left-color: #16a34a; } .s-6  .status-qt { color: #4ade80; }
+
+  /* Alertas */
+  .alertas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 160px;
+    overflow-y: auto;
+  }
+
+  .alertas-lista::-webkit-scrollbar { width: 3px; }
+  .alertas-lista::-webkit-scrollbar-thumb { background: #3a3f50; border-radius: 2px; }
+
+  .alerta-item {
+    background: #252930;
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    border-left: 3px solid #3a3f50;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .alerta-alta  { border-left-color: #e74c3c; background: #2a1f1f; }
+  .alerta-media { border-left-color: #3b82f6; background: #1f2430; }
+  .alerta-baixa { border-left-color: #6b7280; }
+
+  .alerta-icone { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+  .alerta-texto { flex: 1; color: #c8cdd8; }
+  .alerta-hora  { color: #4b5563; font-size: 10px; flex-shrink: 0; }
+
+  .sem-alertas {
+    text-align: center;
+    color: #4b5563;
+    font-size: 12px;
+    padding: 16px 0;
+  }
+
+  /* Ações */
+  .acoes {
+    padding: 10px 16px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .btn {
+    flex: 1;
+    padding: 7px 10px;
+    border-radius: 7px;
+    border: 1px solid #2e3340;
+    background: #252930;
+    color: #c8cdd8;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .btn:hover { background: #2e3340; color: #fff; }
+  .btn-primary { background: #9b1814; border-color: #9b1814; color: #fff; }
+  .btn-primary:hover { background: #b91c1c; border-color: #b91c1c; }
+
+  /* Estado offline */
+  .offline-msg {
+    text-align: center;
+    padding: 20px 16px;
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .offline-msg strong {
+    display: block;
+    color: #9ca3af;
+    margin-bottom: 4px;
+  }
+
+  /* Última atualização */
+  .ultima-atualizacao {
+    text-align: center;
+    color: #4b5563;
+    font-size: 10px;
+    padding: 6px 0 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">
+    <div class="header-logo">📦</div>
+    Mais Delivery Monitor
+  </div>
+  <span class="header-badge" id="badge-status">—</span>
+</div>
+
+<div id="conteudo-online" style="display:none;">
+
+  <div class="section">
+    <div class="section-title">Visão geral</div>
+    <div class="metricas-grid">
+      <div class="metrica" id="card-ativos">
+        <span class="metrica-num" id="num-ativos">0</span>
+        <span class="metrica-label">Ativos</span>
+      </div>
+      <div class="metrica alert" id="card-atrasados">
+        <span class="metrica-num" id="num-atrasados">0</span>
+        <span class="metrica-label">Atrasados</span>
+      </div>
+      <div class="metrica warn" id="card-sem-entregador">
+        <span class="metrica-num" id="num-sem-entregador">0</span>
+        <span class="metrica-label">Sem motoboy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Por status</div>
+    <div class="status-grid">
+      <div class="status-item s--1">
+        <span class="status-nome">Ag. pagamento</span>
+        <span class="status-qt" id="sq--1">0</span>
+      </div>
+      <div class="status-item s-1">
+        <span class="status-nome">Verificando</span>
+        <span class="status-qt" id="sq-1">0</span>
+      </div>
+      <div class="status-item s-2">
+        <span class="status-nome">Na fila</span>
+        <span class="status-qt" id="sq-2">0</span>
+      </div>
+      <div class="status-item s-3">
+        <span class="status-nome">Em andamento</span>
+        <span class="status-qt" id="sq-3">0</span>
+      </div>
+      <div class="status-item s-4">
+        <span class="status-nome">Pronto</span>
+        <span class="status-qt" id="sq-4">0</span>
+      </div>
+      <div class="status-item s-5">
+        <span class="status-nome">Saiu entrega</span>
+        <span class="status-qt" id="sq-5">0</span>
+      </div>
+      <div class="status-item s-7">
+        <span class="status-nome">Na porta</span>
+        <span class="status-qt" id="sq-7">0</span>
+      </div>
+      <div class="status-item s-6">
+        <span class="status-nome">Entregues hoje</span>
+        <span class="status-qt" id="sq-6">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Alertas recentes</div>
+    <div class="alertas-lista" id="alertas-lista">
+      <div class="sem-alertas">Nenhum alerta ainda</div>
+    </div>
+  </div>
+
+  <div class="ultima-atualizacao" id="ultima-atualizacao">—</div>
+
+</div>
+
+<div id="conteudo-offline">
+  <div class="offline-msg">
+    <strong>Painel não detectado</strong>
+    Abra o painel Mais Delivery<br>
+    na aba <em>Pedidos</em> para<br>
+    ativar o monitoramento.
+  </div>
+</div>
+
+<div class="acoes">
+  <button class="btn btn-primary" id="btn-abrir-painel">Abrir painel</button>
+  <button class="btn" id="btn-limpar-alertas">Limpar alertas</button>
+  <button class="btn" id="btn-config">⚙ Config</button>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
